@@ -44,7 +44,7 @@ app.post('/check', (req, res) => {
         req.session.wrongAttempts = 0;
         res.sendFile(__dirname + '/public/HTML/secret.html');
     } else {
-        if(!req.session.wrongAtempts) {
+        if(!req.session.wrongAttempts) {
             req.session.wrongAttempts = 1;
         } else {
             req.session.wrongAttempts++;

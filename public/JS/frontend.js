@@ -31,9 +31,18 @@ function goBeserk(attempt){
 
         // Step 3: type the error message
         const msg = errMsgs[attempt - 1] || errMsgs[errMsgs.length - 1];
-        typeText('#output', msg, 50+(attempt*25));
+        const speed = 50/(attempt);
+        typeText('#output', msg, speed);
 
         //Step 4: go beserk
+        if(attempt > 2) {
+            let isDark = false;
+            setInterval(() => {
+                isDark = !isDark;
+                document.body.classList.toggle('dark-mode', isDark);
+                document.body.classList.toggle('light-mode', !isDark);
+            }, 20);
+        }
         //change the background of the website and all of the components between two themes 10x/sec
         //play a siren
         //create popup after popup
@@ -60,10 +69,11 @@ const errMsgs = [
   "Still wrong. Further incorrect answers will escalate this.",
   "That third attempt is still incorrect!",
   "TODO: Insert famous quote here.",
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut porta luctus mi eu consequat. Nam eget posuere lacus. Vivamus accumsan sit amet mauris at maximus. Ut scelerisque scelerisque erat, eget ultricies arcu facilisis a. Integer sem eros, auctor vitae luctus eu, eleifend non turpis. Proin nec mollis sapien, id maximus quam. Maecenas a tortor a lectus euismod dictum egestas eu metus. Ut id facilisis ipsum, et venenatis lorem. Fusce id elit arcu. Sed at magna at velit euismod auctor in at elit. Praesent tempus, tellus ac viverra faucibus, metus libero tristique ex, vel fringilla nulla enim vitae odio. Curabitur scelerisque nulla ut felis interdum, non hendrerit felis maximus. Sed auctor finibus felis at malesuada. Suspendisse potenti. In pulvinar, risus efficitur hendrerit porta, risus ante pretium magna, ac lobortis neque nisl at dolor.",
 ];
 
 // Type text.
-function typeText(targetSelector, text, speed = 50) {
+function typeText(targetSelector, text, speed) {
   const target = document.querySelector(targetSelector);
   target.textContent = '';  // clear previous content
   
