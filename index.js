@@ -4,6 +4,7 @@
 
 import express from 'express';
 import bodyParser from 'body-parser';
+import session from 'express-session';
 
 import {dirname} from 'path';
 import {fileURLToPath} from 'url';
@@ -28,12 +29,26 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/HTML/index.html');
 });
 
+// Cookies for saving how many times the user input an incorrect Use sessions middleware with a secret
+app.use(session({
+    secret: 'a very secret key here',  // TODO: change this to something set in a git ignored file. Make it a long string.
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 600000 } // Session expires in 10 mins
+}));
+
 // Check the password, decide whether to load & load
 app.post('/check', (req, res) => {
     pwd = req.body.password;
     if(pwd === correctPwd){
+        req.session.wrongAttempts = 0;
         res.sendFile(__dirname + '/public/HTML/secret.html');
     } else {
-        res.redirect('/?error=true');
+        if(!req.session.wrongAtempts) {
+            req.session.wrongAttempts = 1;
+        } else {
+            req.session.wrongAttempts++;
+        }
+        res.redirect('/?error=true&attempt=' + req.session.wrongAttempts);
     }
 });
